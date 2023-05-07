@@ -8,11 +8,11 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
     title: 'Documentation',
     tagline: 'Documentation',
-    favicon: 'img/favicon.ico',
+    favicon: 'img/logo.svg',
 
     // Set the production url of your site here
-    url: 'https://szostok.io',
-    baseUrl: '/docs',
+    url: 'https://docs.szostok.io',
+    baseUrl: '/',
 
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
@@ -24,7 +24,23 @@ const config = {
         defaultLocale: 'en',
         locales: ['en'],
     },
-
+    themes: [
+        [
+            "@easyops-cn/docusaurus-search-local",
+            /** @type {import("@easyops-cn/docusaurus-search-local").PluginOptions} */
+            ({
+                hashed: true,
+                indexBlog: false,
+                indexDocs: true,
+                indexPages: true,
+                language: ["en"],
+                docsDir: ["botkube-plugins"],
+                searchContextByPaths: ["botkube-plugins"],
+                highlightSearchTermsOnTargetPage: true,
+                explicitSearchResultPath: true,
+            }),
+        ],
+    ],
     presets: [
         [
             'classic',
@@ -34,8 +50,7 @@ const config = {
                     sidebarPath: require.resolve('./sidebars.js'),
                     // // Please change this to your repo.
                     // // Remove this to remove the "edit this page" links.
-                    // editUrl:
-                    //   'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+
                 },
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),
@@ -44,13 +59,28 @@ const config = {
         ],
     ],
     plugins: [
+        function (context, options) {
+            return {
+                name: 'webpack-configuration-plugin',
+                configureWebpack(config, isServer, utils) {
+                    return {
+                        resolve: {
+                            symlinks: false,
+                        }
+                    };
+                }
+            };
+        },
         [
             '@docusaurus/plugin-content-docs',
             {
-                id: 'version',
-                path: 'version',
-                routeBasePath: 'version',
-                sidebarPath: require.resolve('./sidebars.version.js'),
+                id: 'botkube-plugins',
+                path: 'botkube-plugins',
+                routeBasePath: 'botkube-plugins',
+                editUrl: ({docPath}) => {
+                    return `https://github.com/mszostok/botkube-plugins/tree/main/docs/${docPath.replace("docs/botkube-plugins", "")}`
+                },
+                sidebarPath: require.resolve('./sidebars.botkube-plugins.js'),
                 // ... other options
             },
         ],
@@ -58,62 +88,30 @@ const config = {
     themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         ({
-            // Replace with your project's social card
-            image: 'img/docusaurus-social-card.jpg',
             navbar: {
                 title: 'DOCS',
                 items: [
                     {
-                        type: 'docSidebar',
-                        docsPluginId: "version",
-                        sidebarId: 'versionSidebar',
+                        type: 'search',
                         position: 'left',
-                        label: 'Version',
-                    },
-                    {
-                        href: 'https://github.com/facebook/docusaurus',
-                        label: 'GitHub',
-                        position: 'right',
                     },
                 ],
+
             },
             footer: {
                 style: 'dark',
                 links: [
                     {
-                        title: 'Version',
-                        items: [
-                            {
-                                label: 'Tutorial',
-                                to: '/version/intro',
-                            },
-                        ],
+                        label: 'GitHub',
+                        href: 'https://github.com/mszostok',
                     },
                     {
-                        title: 'Community',
-                        items: [
-                            {
-                                label: 'Stack Overflow',
-                                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-                            },
-                            {
-                                label: 'Discord',
-                                href: 'https://discordapp.com/invite/docusaurus',
-                            },
-                            {
-                                label: 'Twitter',
-                                href: 'https://twitter.com/docusaurus',
-                            },
-                        ],
+                        label: 'LinkedIn',
+                        href: 'https://www.linkedin.com/in/mszostok/',
                     },
                     {
-                        title: 'More',
-                        items: [
-                            {
-                                label: 'GitHub',
-                                href: 'https://github.com/facebook/docusaurus',
-                            },
-                        ],
+                        label: 'Twitter',
+                        href: 'https://twitter.com/m_szostok',
                     },
                 ],
                 copyright: `Copyright © ${new Date().getFullYear()} Mateusz Szostok`,
