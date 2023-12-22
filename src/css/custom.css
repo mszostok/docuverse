@@ -222,3 +222,9 @@ html[data-theme="dark"] .table-of-contents__link--active code {
         display: block !important;
     }
 }
+
+/* Tabs in mdx */
+.tab-container-nested {
+    margin: 0 0 var(--ifm-list-margin);
+    padding-left: var(--ifm-list-left-padding);
+}
